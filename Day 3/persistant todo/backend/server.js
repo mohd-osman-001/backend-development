@@ -2,10 +2,15 @@ import express from "express";
 
 import path from "path";
 import fs from "fs";
+import cors from "cors";
 
 const finalPath = path.join(import.meta.dirname, "data", "todo.json");
 
 const app = express(); // app instance
+
+
+// any frontend can request from browser
+app.use(cors())
 
 // json parser (parser the json from request body (client))
 app.use(express.json());
@@ -32,9 +37,9 @@ app.get("/todo", (req, res) => {
 app.post("/todo", (req, res) => {
   console.log("POST request recieved on /todo route...");
 
-  const newTodo = req.body.newTodo;
+  const { username, password, email } = req.body;
 
-  todoArr.push(newTodo);
+  todoArr.push({ username, password, email });
 
   fs.writeFileSync(finalPath, JSON.stringify(todoArr), "utf8");
 
