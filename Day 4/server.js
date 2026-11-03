@@ -2,6 +2,8 @@ import express from "express";
 
 const app = express();
 
+let limit = 5;
+
 let counter = 0;
 
 const reqCounterMiddleware = (req, res, next)=>{
@@ -10,7 +12,16 @@ const reqCounterMiddleware = (req, res, next)=>{
     next()
 }
 
-app.get("/sum/:a/:b", reqCounterMiddleware, (req, res)=>{
+const rareLimiterMiddleware = (req, res, next)=>{
+    if(counter>limit){
+        res.json({msg: "Rare limits exceeds..."})
+    }
+    else{
+        next();
+    }
+}
+
+app.get("/sum/:a/:b", reqCounterMiddleware, rareLimiterMiddleware, (req, res)=>{
     const {a, b} = req.params;
     let result = parseInt(a) + parseInt(b);
 
