@@ -1,35 +1,19 @@
 import express from "express";
 
+import reqCounterMiddleware from "./middlewares/reqCounterMiddleware.js";
+import { div, mul, sum } from "./src/controllers/calculatorController.js";
+import rareLimiterMiddleware from "./middlewares/rareLimitterMiddleware.js";
+
 const app = express();
 
-let limit = 5;
+app.use(reqCounterMiddleware);
+app.use(rareLimiterMiddleware)
 
-let counter = 0;
+app.get("/sum/:a/:b", sum);
 
-const reqCounterMiddleware = (req, res, next)=>{
-    counter++;
-    console.log("New request recieved and counter increased to", counter)
-    next()
-}
+app.get("/mul/:a/:b", mul);
 
-const rareLimiterMiddleware = (req, res, next)=>{
-    if(counter>limit){
-        res.json({msg: "Rare limits exceeds..."})
-    }
-    else{
-        next();
-    }
-}
-
-app.get("/sum/:a/:b", reqCounterMiddleware, rareLimiterMiddleware, (req, res)=>{
-    const {a, b} = req.params;
-    let result = parseInt(a) + parseInt(b);
-
-    res.json({
-        msg: "Sum request recieved at backend",
-        sum: result
-    })
-})
+app.get("/div/:a/:b", div);
 
 app.listen("8080", ()=>{
     console.log("Server is listening on PORT: 8080")
