@@ -1,7 +1,7 @@
-import { requestStore } from "../utils/requestStore.js";
+import { limit, counter } from "../utils/requestStore.js";
 
 const rareLimiterMiddleware = (req, res, next)=>{
-    if(requestStore.counter > requestStore.limit){
+    if(counter > limit){
         res.json({msg: "Rare limits exceeds..."})
     }
     else{

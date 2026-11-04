@@ -1,10 +1,11 @@
-import { requestStore } from "../utils/requestStore.js";
+import { counter } from "../utils/requestStore.js";
+import { setCounter } from "../utils/requestStore.js";
 
 const reqCounterMiddleware = (req, res, next) => {
-  requestStore.counter++;
+  setCounter(counter+1)
   console.log(
     "New request recieved and counter increased to",
-    requestStore.counter,
+    counter,
   );
   next();
 };
